@@ -42,6 +42,7 @@ dependencies:
   google_fonts: ^2.3.1
   flutter_screenutil: ^5.3.1
   font_awesome_flutter: ^9.2.0
+  flutter_displaymode: ^0.3.2
 
 dev_dependencies:
   flutter_test:

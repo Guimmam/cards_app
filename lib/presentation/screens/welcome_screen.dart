@@ -1,3 +1,5 @@
+import 'package:cards_app/presentation/screens/modal_bottom_sheet_create_account.dart';
+import 'package:cards_app/presentation/widgets/continue_with_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,22 +18,70 @@ class WelcomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Hi There!', style: _textTheme.headline4),
+            Text('Hi There!', style: _textTheme.headline3),
+            Text(
+              'Please select the provider to login to Cards app',
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
+            ContinueWithButton(
+                text: 'Continue With Google',
+                icon: FaIcon(FontAwesomeIcons.google)),
+            SizedBox(
+              height: 10.h,
+            ),
+            ContinueWithButton(
+                text: 'Continue With Facebook',
+                icon: FaIcon(FontAwesomeIcons.facebookF)),
+            SizedBox(
+              height: 10.h,
+            ),
+            ContinueWithButton(
+                text: 'Continue With Github',
+                icon: FaIcon(FontAwesomeIcons.github)),
+            SizedBox(
+              height: 20.h,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(thickness: 2.h),
+                ),
+                SizedBox(width: 16.w),
+                Text('Or use email to continue'),
+                SizedBox(width: 16.w),
+                Expanded(child: Divider(thickness: 2.h)),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            ContinueWithButton(
+              text: 'Log in via Email',
+              icon: Container(),
+            ),
+            SizedBox(height: 10.h),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: FaIcon(FontAwesomeIcons.google),
-                onPressed: () {},
-                label: Text(
-                  'Continue With Google',
-                  style:
-                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-                ),
-              ),
+              child: OutlinedButton(
+                  onPressed: () {
+                    _showModalBottomSheet(context);
+                  },
+                  child: Text('Create an account via email')),
             )
           ],
         ),
       )),
     ));
+  }
+
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
+        context: context,
+        builder: (context) => ModalBottomSheetCreateAccount());
   }
 }
