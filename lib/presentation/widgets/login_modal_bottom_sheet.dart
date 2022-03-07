@@ -52,7 +52,7 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
         initialChildSize: 0.6,
         builder: (context, scrollController) => Container(
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius:
                     BorderRadius.vertical(top: Radius.circular(15.r))),
             child: Column(
@@ -69,7 +69,10 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                       ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(15.r)),
                         child: Container(
-                          color: Color(0xFFf0f0f0),
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Color(0xFFf0f0f0)
+                                  : Color(0xFF222222),
                           child: IconButton(
                             onPressed: () {
                               Navigator.of(context).pop();

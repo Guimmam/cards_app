@@ -58,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             ContinueWithButton(
-                text: 'Log in via Email',
+                text: 'Login via Email',
                 icon: Container(),
                 onPressed: () => _showLoginBottomSheet(context)),
             SizedBox(height: 10.h),

@@ -34,10 +34,18 @@ const textFieldColor = Color(0XFFdce7af);
 const lightFontColor = Color(0XFF1b1b1b);
 
 ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
-    primarySwatch: generateMaterialColor(primaryColor),
-    primaryColor: primaryColor,
-    textTheme: GoogleFonts.nunitoSansTextTheme(),
+    colorScheme: ColorScheme.light(),
+    //primarySwatch: generateMaterialColor(primaryColor),
+    textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
+      bodyText2: GoogleFonts.nunito(color: lightFontColor),
+      headline3: GoogleFonts.nunito(
+        color: lightFontColor,
+        fontWeight: FontWeight.bold,
+      ),
+      headline5: GoogleFonts.nunito(
+        color: lightFontColor,
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
           textStyle: MaterialStateProperty.all(
@@ -47,7 +55,7 @@ ThemeData lightTheme = ThemeData(
             borderRadius: BorderRadius.circular(15.r),
             // side: BorderSide(color: Colors.red),
           )),
-          backgroundColor: MaterialStateProperty.all(accentColor),
+          // backgroundColor: MaterialStateProperty.all(accentColor),
           padding:
               MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14.h))),
     ),
@@ -68,5 +76,43 @@ ThemeData lightTheme = ThemeData(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.r))));
 
 ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
-);
+    colorScheme: ColorScheme.dark(),
+    //primarySwatch: generateMaterialColor(primaryColor),
+    textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
+      bodyText2: GoogleFonts.nunito(color: Colors.white70),
+      headline3: GoogleFonts.nunito(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      headline5: GoogleFonts.nunito(
+        color: Colors.white,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(
+              GoogleFonts.nunito(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
+            // side: BorderSide(color: Colors.red),
+          )),
+          //backgroundColor: MaterialStateProperty.all(accentColor),
+          padding:
+              MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14.h))),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(
+              GoogleFonts.nunito(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
+            // side: BorderSide(color: Colors.red),
+          )),
+          //backgroundColor: MaterialStateProperty.all(accentColor),
+          padding:
+              MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 14.h))),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.r))));
