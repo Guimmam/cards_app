@@ -5,11 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ContinueWithButton extends StatelessWidget {
   final String text;
   final Widget icon;
+  final VoidCallback? onPressed;
 
   const ContinueWithButton({
     Key? key,
     required this.text,
     required this.icon,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class ContinueWithButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Stack(
           children: [
             Row(

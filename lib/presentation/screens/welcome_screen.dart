@@ -1,5 +1,7 @@
 import 'package:cards_app/presentation/screens/modal_bottom_sheet_create_account.dart';
 import 'package:cards_app/presentation/widgets/continue_with_button.dart';
+import 'package:cards_app/presentation/widgets/login_modal_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
           children: [
             Text('Hi There!', style: _textTheme.headline3),
             Text(
-              'Please select the provider to login to Cards app',
+              'Please select the provider to enter to Cards',
             ),
             SizedBox(
               height: 10.h,
@@ -56,16 +58,14 @@ class WelcomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 20.h),
             ContinueWithButton(
-              text: 'Log in via Email',
-              icon: Container(),
-            ),
+                text: 'Log in via Email',
+                icon: Container(),
+                onPressed: () => _showLoginBottomSheet(context)),
             SizedBox(height: 10.h),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                  onPressed: () {
-                    _showModalBottomSheet(context);
-                  },
+                  onPressed: () => _showCreateAccountSheet(context),
                   child: Text('Create an account via email')),
             )
           ],
@@ -74,7 +74,14 @@ class WelcomeScreen extends StatelessWidget {
     ));
   }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showLoginBottomSheet(BuildContext context) => showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => LoginModalBottomSheet(),
+      );
+
+  void _showCreateAccountSheet(BuildContext context) {
     showModalBottomSheet(
         isDismissible: false,
         enableDrag: false,
