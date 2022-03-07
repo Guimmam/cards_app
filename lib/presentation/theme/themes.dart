@@ -79,15 +79,15 @@ ThemeData darkTheme = ThemeData(
     colorScheme: ColorScheme.dark(),
     //primarySwatch: generateMaterialColor(primaryColor),
     textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
-      bodyText2: GoogleFonts.nunito(color: Colors.white70),
-      headline3: GoogleFonts.nunito(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      headline5: GoogleFonts.nunito(
-        color: Colors.white,
-      ),
-    ),
+        bodyText2: GoogleFonts.nunito(color: Colors.white70),
+        headline3: GoogleFonts.nunito(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        headline5: GoogleFonts.nunito(
+          color: Colors.white,
+        ),
+        subtitle1: GoogleFonts.nunito(color: Colors.white70)),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
           textStyle: MaterialStateProperty.all(
