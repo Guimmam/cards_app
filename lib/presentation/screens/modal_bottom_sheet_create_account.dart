@@ -70,13 +70,13 @@ class _ModalBottomSheetCreateAccountState
                       borderRadius: BorderRadius.all(Radius.circular(15.r)),
                       child: Container(
                         color: Theme.of(context).brightness == Brightness.light
-                            ? Color(0xFFf0f0f0)
-                            : Color(0xFF222222),
+                            ? const Color(0xFFf0f0f0)
+                            : const Color(0xFF222222),
                         child: IconButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                         ),
                       ),
                     )
@@ -89,13 +89,13 @@ class _ModalBottomSheetCreateAccountState
                     children: [
                       TextFormField(
                         validator: validateUsername,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: 'Username', hintText: 'John Nowak'),
                       ),
                       SizedBox(height: 10.h),
                       TextFormField(
                         validator: validateEmail,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: 'Email', hintText: 'example@gmail.com'),
                       ),
                       SizedBox(height: 10.h),
@@ -120,7 +120,7 @@ class _ModalBottomSheetCreateAccountState
                   ),
                 ),
                 SizedBox(height: 10.h),
-                Text('Password must include: '),
+                const Text('Password must include: '),
                 Row(
                   children: [
                     SizedBox(
@@ -134,7 +134,7 @@ class _ModalBottomSheetCreateAccountState
                           onChanged: (_) {}),
                     ),
                     SizedBox(width: 5.w),
-                    Text('Symbol')
+                    const Text('Symbol')
                   ],
                 ),
                 Row(
@@ -150,7 +150,7 @@ class _ModalBottomSheetCreateAccountState
                           onChanged: (_) {}),
                     ),
                     SizedBox(width: 5.w),
-                    Text('Number')
+                    const Text('Number')
                   ],
                 ),
                 Row(
@@ -166,7 +166,7 @@ class _ModalBottomSheetCreateAccountState
                           onChanged: (_) {}),
                     ),
                     SizedBox(width: 5.w),
-                    Text('Uppercase Letter')
+                    const Text('Uppercase Letter')
                   ],
                 ),
                 Row(
@@ -182,7 +182,7 @@ class _ModalBottomSheetCreateAccountState
                           onChanged: (_) {}),
                     ),
                     SizedBox(width: 5.w),
-                    Text('At least 8 Characters')
+                    const Text('At least 8 Characters')
                   ],
                 ),
                 Padding(
@@ -193,7 +193,7 @@ class _ModalBottomSheetCreateAccountState
                           onPressed: () {
                             _key.currentState!.validate();
                           },
-                          child: Text('Create an Account'))),
+                          child: const Text('Create an Account'))),
                 )
               ],
             ),

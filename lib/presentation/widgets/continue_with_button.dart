@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContinueWithButton extends StatelessWidget {
   final String text;
   final Widget icon;
   final VoidCallback? onPressed;
+  final Color? bgColor;
+  final Color? textColor;
 
   const ContinueWithButton({
     Key? key,
     required this.text,
     required this.icon,
     this.onPressed,
+    this.bgColor,
+    this.textColor,
   }) : super(key: key);
 
   @override
@@ -19,6 +22,11 @@ class ContinueWithButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
+        style: const ButtonStyle().copyWith(
+          backgroundColor: MaterialStateProperty.all<Color>(bgColor == null
+              ? Theme.of(context).colorScheme.primary
+              : bgColor!),
+        ),
         onPressed: onPressed,
         child: Stack(
           children: [
@@ -27,8 +35,10 @@ class ContinueWithButton extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style:
-                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
               ],
             ),

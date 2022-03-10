@@ -34,7 +34,7 @@ const textFieldColor = Color(0XFFdce7af);
 const lightFontColor = Color(0XFF1b1b1b);
 
 ThemeData lightTheme = ThemeData(
-    colorScheme: ColorScheme.light(),
+    colorScheme: const ColorScheme.light(),
     //primarySwatch: generateMaterialColor(primaryColor),
     textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
       bodyText2: GoogleFonts.nunito(color: lightFontColor),
@@ -76,7 +76,7 @@ ThemeData lightTheme = ThemeData(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.r))));
 
 ThemeData darkTheme = ThemeData(
-    colorScheme: ColorScheme.dark(),
+    colorScheme: const ColorScheme.dark(),
     //primarySwatch: generateMaterialColor(primaryColor),
     textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
         bodyText2: GoogleFonts.nunito(color: Colors.white70),

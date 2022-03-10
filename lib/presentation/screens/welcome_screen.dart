@@ -12,6 +12,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme _textTheme = Theme.of(context).textTheme;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         body: SafeArea(
       child: SingleChildScrollView(
@@ -21,27 +22,45 @@ class WelcomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Hi There!', style: _textTheme.headline3),
-            Text(
+            const Text(
               'Please select the provider to enter to Cards',
             ),
             SizedBox(
               height: 10.h,
             ),
             ContinueWithButton(
+                onPressed: () {},
+                bgColor: Colors.black,
+                textColor: Colors.white,
                 text: 'Continue With Google',
-                icon: FaIcon(FontAwesomeIcons.google)),
+                icon: const FaIcon(
+                  FontAwesomeIcons.google,
+                  color: Colors.white,
+                )),
             SizedBox(
               height: 10.h,
             ),
             ContinueWithButton(
+                onPressed: () {},
+                bgColor: isDark ? Colors.black26 : Colors.white,
+                textColor: isDark ? Colors.white : Colors.black,
                 text: 'Continue With Facebook',
-                icon: FaIcon(FontAwesomeIcons.facebookF)),
+                icon: FaIcon(
+                  FontAwesomeIcons.facebook,
+                  color: isDark ? Colors.white : Colors.black,
+                )),
             SizedBox(
               height: 10.h,
             ),
             ContinueWithButton(
+                onPressed: (() {}),
+                bgColor: isDark ? Colors.black26 : Colors.white,
+                textColor: isDark ? Colors.white : Colors.black,
                 text: 'Continue With Github',
-                icon: FaIcon(FontAwesomeIcons.github)),
+                icon: FaIcon(
+                  FontAwesomeIcons.github,
+                  color: isDark ? Colors.white : Colors.black,
+                )),
             SizedBox(
               height: 20.h,
             ),
@@ -51,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Divider(thickness: 2.h),
                 ),
                 SizedBox(width: 16.w),
-                Text('Or use email to continue'),
+                const Text('Or use email to continue'),
                 SizedBox(width: 16.w),
                 Expanded(child: Divider(thickness: 2.h)),
               ],
@@ -66,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton(
                   onPressed: () => _showCreateAccountSheet(context),
-                  child: Text('Create an account via email')),
+                  child: const Text('Create an account via email')),
             )
           ],
         ),
@@ -78,7 +97,7 @@ class WelcomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         context: context,
-        builder: (context) => LoginModalBottomSheet(),
+        builder: (context) => const LoginModalBottomSheet(),
       );
 
   void _showCreateAccountSheet(BuildContext context) {
@@ -89,6 +108,6 @@ class WelcomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
         context: context,
-        builder: (context) => ModalBottomSheetCreateAccount());
+        builder: (context) => const ModalBottomSheetCreateAccount());
   }
 }

@@ -71,13 +71,13 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                         child: Container(
                           color:
                               Theme.of(context).brightness == Brightness.light
-                                  ? Color(0xFFf0f0f0)
-                                  : Color(0xFF222222),
+                                  ? const Color(0xFFf0f0f0)
+                                  : const Color(0xFF222222),
                           child: IconButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            icon: Icon(Icons.close),
+                            icon: const Icon(Icons.close),
                           ),
                         ),
                       )
@@ -97,14 +97,14 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                           children: [
                             TextFormField(
                               //validator: validateUsername,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   labelText: 'Username',
                                   hintText: 'John Nowak'),
                             ),
                             SizedBox(height: 10.h),
                             TextFormField(
                               //validator: validateEmail,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   labelText: 'Email',
                                   hintText: 'example@gmail.com'),
                             ),
@@ -133,7 +133,9 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                             Padding(
                               padding: MediaQuery.of(context).viewInsets,
                               child: ContinueWithButton(
-                                  text: 'text', icon: Container()),
+                                  onPressed: () {},
+                                  text: 'Login',
+                                  icon: Container()),
                             )
                           ],
                         ),
