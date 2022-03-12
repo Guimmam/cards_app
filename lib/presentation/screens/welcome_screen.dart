@@ -1,4 +1,4 @@
-import 'package:cards_app/presentation/screens/modal_bottom_sheet_create_account.dart';
+import 'package:cards_app/presentation/widgets/create_account_modal_bottom_sheet.dart';
 import 'package:cards_app/presentation/widgets/continue_with_button.dart';
 import 'package:cards_app/presentation/widgets/login_modal_bottom_sheet.dart';
 
@@ -108,6 +108,6 @@ class WelcomeScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
         context: context,
-        builder: (context) => const ModalBottomSheetCreateAccount());
+        builder: (context) => const CreateAccountModalBottomSheet());
   }
 }

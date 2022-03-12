@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ModalBottomSheetCreateAccount extends StatefulWidget {
-  const ModalBottomSheetCreateAccount({
+class CreateAccountModalBottomSheet extends StatefulWidget {
+  const CreateAccountModalBottomSheet({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ModalBottomSheetCreateAccount> createState() =>
-      _ModalBottomSheetCreateAccountState();
+  State<CreateAccountModalBottomSheet> createState() =>
+      _CreateAccountModalBottomSheetState();
 }
 
-class _ModalBottomSheetCreateAccountState
-    extends State<ModalBottomSheetCreateAccount> {
+class _CreateAccountModalBottomSheetState
+    extends State<CreateAccountModalBottomSheet> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final _passwordFocusNode = FocusNode();
   bool _isHiddenPassword = true;

@@ -1,4 +1,8 @@
+// ignore_for_file: await_only_futures
+import 'package:cards_app/main.dart';
 import 'package:cards_app/presentation/widgets/continue_with_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,7 +15,16 @@ class LoginModalBottomSheet extends StatefulWidget {
 
 class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  final _passwordFocusNode = FocusNode();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   bool _isHiddenPassword = true;
   bool _hasNumber = false;
   bool _hasSymbol = false;
@@ -96,14 +109,8 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                         child: Column(
                           children: [
                             TextFormField(
-                              //validator: validateUsername,
-                              decoration: const InputDecoration(
-                                  labelText: 'Username',
-                                  hintText: 'John Nowak'),
-                            ),
-                            SizedBox(height: 10.h),
-                            TextFormField(
                               //validator: validateEmail,
+                              controller: emailController,
                               decoration: const InputDecoration(
                                   labelText: 'Email',
                                   hintText: 'example@gmail.com'),
@@ -111,7 +118,7 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                             SizedBox(height: 10.h),
                             TextFormField(
                                 //validator: validatePassword,
-                                focusNode: _passwordFocusNode,
+                                controller: passwordController,
                                 onChanged: (password) =>
                                     onPasswordChanged(password),
                                 obscureText: _isHiddenPassword,
@@ -133,7 +140,11 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                             Padding(
                               padding: MediaQuery.of(context).viewInsets,
                               child: ContinueWithButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    _key.currentState!.validate();
+                                    await logiIn();
+                                    Navigator.of(context).pop();
+                                  },
                                   text: 'Login',
                                   icon: Container()),
                             )
@@ -147,5 +158,16 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
             )),
       ),
     );
+  }
+
+  Future<void> logiIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 }

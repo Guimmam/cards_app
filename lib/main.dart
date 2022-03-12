@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cards_app/presentation/screens/home_screen.dart';
 import 'package:cards_app/presentation/screens/welcome_screen.dart';
 import 'package:cards_app/presentation/theme/theme_menager.dart';
 import 'package:cards_app/presentation/theme/themes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final navigatorKey = GlobalKey<NavigatorState>();
   @override
   void initState() {
     _themeManager.addListener(() {
@@ -54,11 +57,31 @@ class _MyAppState extends State<MyApp> {
     return ScreenUtilInit(
         designSize: const Size(360, 640),
         builder: () => MaterialApp(
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: _themeManager.themeMode,
-            home: const WelcomeScreen()));
+            home: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (snapshot.hasData) {
+                  return const HomeScreen();
+                }
+                if (snapshot.hasError) {
+                  return const Scaffold(
+                    body: const Center(child: Text('Something went wrong')),
+                  );
+                } else {
+                  return const WelcomeScreen();
+                }
+              },
+            )));
   }
 }
