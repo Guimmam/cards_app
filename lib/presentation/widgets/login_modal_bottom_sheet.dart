@@ -4,6 +4,7 @@ import 'package:cards_app/presentation/widgets/continue_with_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginModalBottomSheet extends StatefulWidget {
@@ -26,35 +27,6 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
   }
 
   bool _isHiddenPassword = true;
-  bool _hasNumber = false;
-  bool _hasSymbol = false;
-  bool _hasAtLeast8Characters = false;
-  bool _hasUppercaseLetter = false;
-
-  onPasswordChanged(String password) {
-    final symbolRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
-    final numericRegex = RegExp(r'[0-9]');
-    final uppercaseRegex = RegExp(r'[A-Z]');
-
-    setState(() {
-      _hasAtLeast8Characters = false;
-      if (password.length >= 8) {
-        _hasAtLeast8Characters = true;
-      }
-      _hasNumber = false;
-      if (numericRegex.hasMatch(password)) {
-        _hasNumber = true;
-      }
-      _hasSymbol = false;
-      if (symbolRegex.hasMatch(password)) {
-        _hasSymbol = true;
-      }
-      _hasUppercaseLetter = false;
-      if (uppercaseRegex.hasMatch(password)) {
-        _hasUppercaseLetter = true;
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,49 +78,59 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                       SizedBox(height: 20.h),
                       Form(
                         key: _key,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              //validator: validateEmail,
-                              controller: emailController,
-                              decoration: const InputDecoration(
-                                  labelText: 'Email',
-                                  hintText: 'example@gmail.com'),
-                            ),
-                            SizedBox(height: 10.h),
-                            TextFormField(
-                                //validator: validatePassword,
+                        child: AutofillGroup(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                autofillHints: [AutofillHints.email],
+                                validator: validateEmail,
+                                controller: emailController,
+                                decoration: const InputDecoration(
+                                    labelText: 'Email',
+                                    hintText: 'example@gmail.com'),
+                              ),
+                              SizedBox(height: 10.h),
+                              TextFormField(
+                                autofillHints: [AutofillHints.password],
+                                keyboardType: TextInputType.visiblePassword,
+                                validator: validatePassword,
                                 controller: passwordController,
-                                onChanged: (password) =>
-                                    onPasswordChanged(password),
                                 obscureText: _isHiddenPassword,
                                 decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    hintText: 'password123',
-                                    suffixIcon: IconButton(
-                                      icon: Icon(_isHiddenPassword
-                                          ? Icons.visibility
-                                          : Icons.visibility_off),
-                                      onPressed: () {
-                                        _isHiddenPassword = !_isHiddenPassword;
-                                        setState(() {});
-                                      },
-                                    ))),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: ContinueWithButton(
-                                  onPressed: () async {
-                                    _key.currentState!.validate();
-                                    await logiIn();
-                                    Navigator.of(context).pop();
-                                  },
-                                  text: 'Login',
-                                  icon: Container()),
-                            )
-                          ],
+                                  labelText: 'Password',
+                                  hintText: 'password123',
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_isHiddenPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                    onPressed: () {
+                                      _isHiddenPassword = !_isHiddenPassword;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                                onEditingComplete: () =>
+                                    TextInput.finishAutofillContext(),
+                              ),
+                              SizedBox(
+                                height: 10.h,
+                              ),
+                              Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: ContinueWithButton(
+                                    onPressed: () async {
+                                      if (_key.currentState!.validate()) {
+                                        print('git');
+                                        await logiIn();
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    text: 'Login',
+                                    icon: Container()),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -167,7 +149,41 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
+}
+
+String? validateEmail(String? email) {
+  final emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  if (email!.isEmpty) return 'E-mail Addres is required.';
+
+  if (!emailRegex.hasMatch(email)) return 'Invalid E-mail Address format';
+
+  return null;
+}
+
+String? validatePassword(String? password) {
+  final symbolRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  final numericRegex = RegExp(r'[0-9]');
+  final uppercaseRegex = RegExp(r'[A-Z]');
+
+  if (password!.length < 8) {
+    return 'Password is too short';
+  }
+
+  if (!numericRegex.hasMatch(password)) {
+    return 'Password has not any numbers';
+  }
+
+  if (!symbolRegex.hasMatch(password)) {
+    return 'Password has not any symbols';
+  }
+
+  if (!uppercaseRegex.hasMatch(password)) {
+    return 'Password has not any uppercase letters';
+  }
+  return null;
 }
