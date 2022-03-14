@@ -4,6 +4,7 @@ import 'package:cards_app/presentation/screens/home_screen.dart';
 import 'package:cards_app/presentation/screens/welcome_screen.dart';
 import 'package:cards_app/presentation/theme/theme_menager.dart';
 import 'package:cards_app/presentation/theme/themes.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,14 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    if (androidInfo.version.sdkInt! > 23) {
+      FlutterDisplayMode.setHighRefreshRate();
+    }
+  }
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -51,9 +60,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      FlutterDisplayMode.setHighRefreshRate();
-    }
     return ScreenUtilInit(
         designSize: const Size(360, 640),
         builder: () => MaterialApp(

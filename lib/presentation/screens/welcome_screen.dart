@@ -94,20 +94,22 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   void _showLoginBottomSheet(BuildContext context) => showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) => const LoginModalBottomSheet(),
-      );
-
-  void _showCreateAccountSheet(BuildContext context) {
-    showModalBottomSheet(
         isDismissible: false,
         enableDrag: false,
         isScrollControlled: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
         context: context,
-        builder: (context) => const CreateAccountModalBottomSheet());
-  }
+        builder: (context) => const LoginModalBottomSheet(),
+      );
+
+  void _showCreateAccountSheet(BuildContext context) => showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
+      context: context,
+      builder: (context) => const CreateAccountModalBottomSheet());
 }

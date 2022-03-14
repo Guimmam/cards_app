@@ -15,11 +15,34 @@ class _CreateAccountModalBottomSheetState
     extends State<CreateAccountModalBottomSheet> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final _passwordFocusNode = FocusNode();
+
   bool _isHiddenPassword = true;
   bool _hasNumber = false;
   bool _hasSymbol = false;
   bool _hasAtLeast8Characters = false;
   bool _hasUppercaseLetter = false;
+  bool _showPasswordInfo = false;
+
+  @override
+  void initState() {
+    _passwordFocusNode.addListener(() {
+      setState(() {
+        if (_passwordFocusNode.hasFocus) {
+          _showPasswordInfo = true;
+        } else {
+          _showPasswordInfo = false;
+        }
+      });
+    });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   onPasswordChanged(String password) {
     final symbolRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
@@ -49,155 +72,190 @@ class _CreateAccountModalBottomSheetState
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: 24.w, right: 24.w, top: 16.h),
+      child: DraggableScrollableSheet(
+        maxChildSize: 0.95,
+        initialChildSize: 0.95,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
           child: Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.only(left: 24.w, right: 24.w, top: 16.h),
+              child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Create an Account',
-                      style: Theme.of(context).copyWith().textTheme.headline5,
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(15.r)),
-                      child: Container(
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? const Color(0xFFf0f0f0)
-                            : const Color(0xFF222222),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: const Icon(Icons.close),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Create an Account',
+                          style:
+                              Theme.of(context).copyWith().textTheme.headline5,
                         ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(15.r)),
+                          child: Container(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? const Color(0xFFf0f0f0)
+                                    : const Color(0xFF222222),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              icon: const Icon(Icons.close),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          Form(
+                            key: _key,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  validator: validateUsername,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Username',
+                                      hintText: 'John Nowak'),
+                                ),
+                                SizedBox(height: 10.h),
+                                TextFormField(
+                                  validator: validateEmail,
+                                  decoration: const InputDecoration(
+                                      labelText: 'Email',
+                                      hintText: 'example@gmail.com'),
+                                ),
+                                SizedBox(height: 10.h),
+                                TextFormField(
+                                    validator: validatePassword,
+                                    focusNode: _passwordFocusNode,
+                                    onChanged: (password) =>
+                                        onPasswordChanged(password),
+                                    obscureText: _isHiddenPassword,
+                                    decoration: InputDecoration(
+                                        labelText: 'Password',
+                                        hintText: 'password123',
+                                        suffixIcon: IconButton(
+                                          icon: Icon(_isHiddenPassword
+                                              ? Icons.visibility
+                                              : Icons.visibility_off),
+                                          onPressed: () {
+                                            _isHiddenPassword =
+                                                !_isHiddenPassword;
+                                            setState(() {});
+                                          },
+                                        ))),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          _showPasswordInfo
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Password must include: '),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.r)),
+                                              splashRadius: 0,
+                                              value: _hasSymbol,
+                                              onChanged: (_) {}),
+                                        ),
+                                        SizedBox(width: 5.w),
+                                        const Text('Symbol')
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.r)),
+                                              splashRadius: 0,
+                                              value: _hasNumber,
+                                              onChanged: (_) {}),
+                                        ),
+                                        SizedBox(width: 5.w),
+                                        const Text('Number')
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.r)),
+                                              splashRadius: 0,
+                                              value: _hasUppercaseLetter,
+                                              onChanged: (_) {}),
+                                        ),
+                                        SizedBox(width: 5.w),
+                                        const Text('Uppercase Letter')
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 20.h,
+                                          width: 20.w,
+                                          child: Checkbox(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.r)),
+                                              splashRadius: 0,
+                                              value: _hasAtLeast8Characters,
+                                              onChanged: (_) {}),
+                                        ),
+                                        SizedBox(width: 5.w),
+                                        const Text('At least 8 Characters')
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  height: 0,
+                                ),
+                        ],
                       ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                _key.currentState!.validate();
+                              },
+                              child: const Text('Create an Account'))),
                     )
                   ],
                 ),
-                SizedBox(height: 20.h),
-                Form(
-                  key: _key,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        validator: validateUsername,
-                        decoration: const InputDecoration(
-                            labelText: 'Username', hintText: 'John Nowak'),
-                      ),
-                      SizedBox(height: 10.h),
-                      TextFormField(
-                        validator: validateEmail,
-                        decoration: const InputDecoration(
-                            labelText: 'Email', hintText: 'example@gmail.com'),
-                      ),
-                      SizedBox(height: 10.h),
-                      TextFormField(
-                          validator: validatePassword,
-                          focusNode: _passwordFocusNode,
-                          onChanged: (password) => onPasswordChanged(password),
-                          obscureText: _isHiddenPassword,
-                          decoration: InputDecoration(
-                              labelText: 'Password',
-                              hintText: 'password123',
-                              suffixIcon: IconButton(
-                                icon: Icon(_isHiddenPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  _isHiddenPassword = !_isHiddenPassword;
-                                  setState(() {});
-                                },
-                              ))),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                const Text('Password must include: '),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                      width: 20.w,
-                      child: Checkbox(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          splashRadius: 0,
-                          value: _hasSymbol,
-                          onChanged: (_) {}),
-                    ),
-                    SizedBox(width: 5.w),
-                    const Text('Symbol')
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                      width: 20.w,
-                      child: Checkbox(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          splashRadius: 0,
-                          value: _hasNumber,
-                          onChanged: (_) {}),
-                    ),
-                    SizedBox(width: 5.w),
-                    const Text('Number')
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                      width: 20.w,
-                      child: Checkbox(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          splashRadius: 0,
-                          value: _hasUppercaseLetter,
-                          onChanged: (_) {}),
-                    ),
-                    SizedBox(width: 5.w),
-                    const Text('Uppercase Letter')
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 20.h,
-                      width: 20.w,
-                      child: Checkbox(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r)),
-                          splashRadius: 0,
-                          value: _hasAtLeast8Characters,
-                          onChanged: (_) {}),
-                    ),
-                    SizedBox(width: 5.w),
-                    const Text('At least 8 Characters')
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.h),
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            _key.currentState!.validate();
-                          },
-                          child: const Text('Create an Account'))),
-                )
-              ],
-            ),
-          ),
+              )),
         ),
       ),
     );
