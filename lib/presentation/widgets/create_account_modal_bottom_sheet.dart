@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CreateAccountModalBottomSheet extends StatefulWidget {
@@ -15,6 +16,8 @@ class _CreateAccountModalBottomSheetState
     extends State<CreateAccountModalBottomSheet> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   final _passwordFocusNode = FocusNode();
+  final _userNameFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
 
   bool _isHiddenPassword = true;
   bool _hasNumber = false;
@@ -40,6 +43,8 @@ class _CreateAccountModalBottomSheetState
 
   @override
   void dispose() {
+    _userNameFocusNode.dispose();
+    _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
   }
@@ -119,42 +124,64 @@ class _CreateAccountModalBottomSheetState
                         children: [
                           Form(
                             key: _key,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  validator: validateUsername,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Username',
-                                      hintText: 'John Nowak'),
-                                ),
-                                SizedBox(height: 10.h),
-                                TextFormField(
-                                  validator: validateEmail,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Email',
-                                      hintText: 'example@gmail.com'),
-                                ),
-                                SizedBox(height: 10.h),
-                                TextFormField(
+                            child: AutofillGroup(
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    autofillHints: const [
+                                      AutofillHints.newUsername
+                                    ],
+                                    keyboardType: TextInputType.name,
+                                    textInputAction: TextInputAction.next,
+                                    focusNode: _userNameFocusNode,
+                                    validator: validateUsername,
+                                    decoration: const InputDecoration(
+                                        labelText: 'Username',
+                                        hintText: 'John Nowak'),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  TextFormField(
+                                    autofillHints: const [AutofillHints.email],
+                                    textInputAction: TextInputAction.next,
+                                    keyboardType: TextInputType.emailAddress,
+                                    focusNode: _emailFocusNode,
+                                    validator: validateEmail,
+                                    decoration: const InputDecoration(
+                                        labelText: 'Email',
+                                        hintText: 'example@gmail.com'),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  TextFormField(
+                                    autofillHints: const [
+                                      AutofillHints.newPassword
+                                    ],
+                                    onFieldSubmitted: (_) {
+                                      _passwordFocusNode.unfocus();
+                                    },
                                     validator: validatePassword,
                                     focusNode: _passwordFocusNode,
                                     onChanged: (password) =>
                                         onPasswordChanged(password),
                                     obscureText: _isHiddenPassword,
                                     decoration: InputDecoration(
-                                        labelText: 'Password',
-                                        hintText: 'password123',
-                                        suffixIcon: IconButton(
-                                          icon: Icon(_isHiddenPassword
-                                              ? Icons.visibility
-                                              : Icons.visibility_off),
-                                          onPressed: () {
-                                            _isHiddenPassword =
-                                                !_isHiddenPassword;
-                                            setState(() {});
-                                          },
-                                        ))),
-                              ],
+                                      labelText: 'Password',
+                                      hintText: 'password123',
+                                      suffixIcon: IconButton(
+                                        icon: Icon(_isHiddenPassword
+                                            ? Icons.visibility
+                                            : Icons.visibility_off),
+                                        onPressed: () {
+                                          _isHiddenPassword =
+                                              !_isHiddenPassword;
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                    onEditingComplete: () =>
+                                        TextInput.finishAutofillContext(),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(height: 10.h),

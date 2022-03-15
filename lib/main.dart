@@ -8,7 +8,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
@@ -83,7 +82,7 @@ class _MyAppState extends State<MyApp> {
             }
             if (snapshot.hasError) {
               return const Scaffold(
-                body: const Center(child: Text('Something went wrong')),
+                body: Center(child: Text('Something went wrong')),
               );
             } else {
               return const WelcomeScreen();

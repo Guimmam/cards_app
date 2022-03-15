@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('YEY!'),
+                const Text('YEY!'),
                 Text(user.email!),
                 SizedBox(
                   width: double.infinity,
@@ -37,8 +37,8 @@ class HomeScreen extends StatelessWidget {
                       onPressed: () {
                         FirebaseAuth.instance.signOut();
                       },
-                      icon: Icon(Icons.logout),
-                      label: Text('Logout')),
+                      icon: const Icon(Icons.logout),
+                      label: const Text('Logout')),
                 )
               ],
             ),

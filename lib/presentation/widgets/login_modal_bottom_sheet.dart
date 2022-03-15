@@ -151,12 +151,13 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
-        duration: Duration(seconds: 10),
+        duration: const Duration(seconds: 10),
         backgroundColor: Theme.of(context).errorColor,
         behavior: SnackBarBehavior.floating,
       ));
       return e;
     }
+    return null;
   }
 }
 
