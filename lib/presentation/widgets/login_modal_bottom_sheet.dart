@@ -1,4 +1,3 @@
-import 'package:cards_app/presentation/widgets/continue_with_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -29,9 +28,11 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
   }
 
   bool _isHiddenPassword = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final bool _isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(left: 24.w, right: 24.w, top: 16.h),
@@ -48,9 +49,9 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(15.r)),
                   child: Container(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? const Color(0xFFf0f0f0)
-                        : const Color(0xFF222222),
+                    color: _isDark
+                        ? const Color(0xFF222222)
+                        : const Color(0xFFf0f0f0),
                     child: IconButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -116,18 +117,35 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
                         ),
                         Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: ContinueWithButton(
-                              onPressed: () async {
-                                if (_key.currentState!.validate()) {
-                                  passwordFocusNode.unfocus();
-                                  final resault = await logiIn();
-                                  if (resault == null) {
-                                    Navigator.of(context).pop();
-                                  } else {}
-                                }
-                              },
-                              text: 'Login',
-                              icon: Container()),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_key.currentState!.validate()) {
+                                    _isLoading = true;
+                                    setState(() {});
+                                    passwordFocusNode.unfocus();
+                                    final resault = await logiIn();
+                                    if (resault == null) {
+                                      Navigator.of(context).pop();
+                                    } else {
+                                      _isLoading = false;
+                                      setState(() {});
+                                    }
+                                  }
+                                },
+                                child: _isLoading
+                                    ? SizedBox(
+                                        height: 25,
+                                        width: 25,
+                                        child: CircularProgressIndicator(
+                                          color: _isDark
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      )
+                                    : const Text('Login')),
+                          ),
                         ),
                         SizedBox(height: 15.h)
                       ],
@@ -149,12 +167,41 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e.toString()),
-        duration: const Duration(seconds: 10),
-        backgroundColor: Theme.of(context).errorColor,
-        behavior: SnackBarBehavior.floating,
-      ));
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          e.message.toString(),
+                          textAlign: TextAlign.center,
+                        ),
+                        TextButton(
+                            onPressed: Navigator.of(context).pop,
+                            child: const Text('Ok'))
+                      ],
+                    ),
+                    Positioned(
+                        top: -35.h,
+                        child: CircleAvatar(
+                          radius: 20.r,
+                          backgroundColor: Theme.of(context).errorColor,
+                          child: const Icon(
+                            Icons.clear,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ))
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.r))),
+              ));
       return e;
     }
     return null;

@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('YEY!'),
+                Text(user.displayName.toString()),
                 Text(user.email!),
                 SizedBox(
                   width: double.infinity,

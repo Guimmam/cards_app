@@ -25,83 +25,84 @@ class WelcomeScreen extends StatelessWidget {
     TextTheme _textTheme = Theme.of(context).textTheme;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
-      child: SingleChildScrollView(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Hi There!', style: _textTheme.headline3),
-            const Text(
-              'Please select the provider to enter to Cards',
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            ContinueWithButton(
-                onPressed: () {},
-                bgColor: Colors.black,
-                textColor: Colors.white,
-                text: 'Continue With Google',
-                icon: const FaIcon(
-                  FontAwesomeIcons.google,
-                  color: Colors.white,
-                )),
-            SizedBox(
-              height: 10.h,
-            ),
-            ContinueWithButton(
-                onPressed: () {},
-                bgColor: isDark ? Colors.black26 : Colors.white,
-                textColor: isDark ? Colors.white : Colors.black,
-                text: 'Continue With Facebook',
-                icon: FaIcon(
-                  FontAwesomeIcons.facebook,
-                  color: isDark ? Colors.white : Colors.black,
-                )),
-            SizedBox(
-              height: 10.h,
-            ),
-            ContinueWithButton(
-                onPressed: (() {}),
-                bgColor: isDark ? Colors.black26 : Colors.white,
-                textColor: isDark ? Colors.white : Colors.black,
-                text: 'Continue With Github',
-                icon: FaIcon(
-                  FontAwesomeIcons.github,
-                  color: isDark ? Colors.white : Colors.black,
-                )),
-            SizedBox(
-              height: 20.h,
-            ),
-            Row(
+          child: SingleChildScrollView(
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Divider(thickness: 2.h),
+                Text('Hi There!', style: _textTheme.headline3),
+                const Text(
+                  'Please select the provider to enter to Cards',
                 ),
-                SizedBox(width: 16.w),
-                const Text('Or use email to continue'),
-                SizedBox(width: 16.w),
-                Expanded(child: Divider(thickness: 2.h)),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ContinueWithButton(
+                    onPressed: () {},
+                    bgColor: Colors.black,
+                    textColor: Colors.white,
+                    text: 'Continue With Google',
+                    icon: const FaIcon(
+                      FontAwesomeIcons.google,
+                      color: Colors.white,
+                    )),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ContinueWithButton(
+                    onPressed: () {},
+                    bgColor: isDark ? Colors.black26 : Colors.white,
+                    textColor: isDark ? Colors.white : Colors.black,
+                    text: 'Continue With Facebook',
+                    icon: FaIcon(
+                      FontAwesomeIcons.facebook,
+                      color: isDark ? Colors.white : Colors.black,
+                    )),
+                SizedBox(
+                  height: 10.h,
+                ),
+                ContinueWithButton(
+                    onPressed: (() {}),
+                    bgColor: isDark ? Colors.black26 : Colors.white,
+                    textColor: isDark ? Colors.white : Colors.black,
+                    text: 'Continue With Github',
+                    icon: FaIcon(
+                      FontAwesomeIcons.github,
+                      color: isDark ? Colors.white : Colors.black,
+                    )),
+                SizedBox(
+                  height: 20.h,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(thickness: 2.h),
+                    ),
+                    SizedBox(width: 16.w),
+                    const Text('Or use email to continue'),
+                    SizedBox(width: 16.w),
+                    Expanded(child: Divider(thickness: 2.h)),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+                ContinueWithButton(
+                    text: 'Login via Email',
+                    icon: Container(),
+                    onPressed: () => _showLoginBottomSheet(context)),
+                SizedBox(height: 10.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                      onPressed: () => _showCreateAccountSheet(context),
+                      child: const Text('Create an account via email')),
+                )
               ],
             ),
-            SizedBox(height: 20.h),
-            ContinueWithButton(
-                text: 'Login via Email',
-                icon: Container(),
-                onPressed: () => _showLoginBottomSheet(context)),
-            SizedBox(height: 10.h),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                  onPressed: () => _showCreateAccountSheet(context),
-                  child: const Text('Create an account via email')),
-            )
-          ],
-        ),
-      )),
-    ));
+          )),
+        ));
   }
 
   void _showLoginBottomSheet(BuildContext context) => showModalBottomSheet(
