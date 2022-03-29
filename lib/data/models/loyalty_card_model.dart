@@ -1,14 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-class LoyaltyCard extends Equatable{
+class LoyaltyCard extends Equatable {
   final int id;
   final String cardName;
   final String companyName;
-  final String cardColor;
+  final int cardColor;
   final String cardNumber;
+  final bool isSync;
 
   const LoyaltyCard({
     required this.id,
+    this.isSync = false,
     this.cardName = "",
     required this.companyName,
     required this.cardColor,
@@ -16,6 +18,5 @@ class LoyaltyCard extends Equatable{
   });
 
   @override
-
   List<Object?> get props => throw UnimplementedError();
 }

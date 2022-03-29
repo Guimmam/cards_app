@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
 import 'package:cards_app/presentation/screens/home_screen.dart';
 import 'package:cards_app/presentation/screens/welcome_screen.dart';
 import 'package:cards_app/presentation/theme/theme_menager.dart';
@@ -63,33 +64,50 @@ class _MyAppState extends State<MyApp> {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: () => MaterialApp(
+        scrollBehavior: MaterialScrollBehavior(
+            androidOverscrollIndicator: AndroidOverscrollIndicator.stretch),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => AuthScreen(),
+          AddLoyaltyCardScreen.routeName: (context) => AddLoyaltyCardScreen(),
+        },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: _themeManager.themeMode,
-        home: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (snapshot.hasData) {
-              return const HomeScreen();
-            }
-            if (snapshot.hasError) {
-              return const Scaffold(
-                body: Center(child: Text('Something went wrong')),
-              );
-            } else {
-              return const WelcomeScreen();
-            }
-          },
-        ),
       ),
+    );
+  }
+}
+
+class AuthScreen extends StatelessWidget {
+  const AuthScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const HomeScreen();
+        }
+        if (snapshot.hasError) {
+          return const Scaffold(
+            body: Center(child: Text('Something went wrong')),
+          );
+        } else {
+          return const WelcomeScreen();
+        }
+      },
     );
   }
 }
