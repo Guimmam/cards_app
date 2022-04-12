@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
 import 'package:cards_app/presentation/screens/home_screen.dart';
+import 'package:cards_app/presentation/screens/scan_code_screen.dart';
 import 'package:cards_app/presentation/screens/welcome_screen.dart';
 import 'package:cards_app/presentation/theme/theme_menager.dart';
 import 'package:cards_app/presentation/theme/themes.dart';
@@ -68,8 +69,9 @@ class _MyAppState extends State<MyApp> {
             androidOverscrollIndicator: AndroidOverscrollIndicator.stretch),
         initialRoute: '/',
         routes: {
-          '/': (context) => AuthScreen(),
+          '/': (context) => const AuthScreen(),
           AddLoyaltyCardScreen.routeName: (context) => AddLoyaltyCardScreen(),
+          ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,

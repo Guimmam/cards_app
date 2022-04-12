@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cards_app/presentation/screens/scan_code_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -65,6 +66,19 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
                                 : Colors.black),
                       )),
                 ),
+                SizedBox(
+                  height: 15.h,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    label: Text('Scan code'),
+                    icon: Icon(Icons.qr_code_scanner),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(ScanCodeScreen.routeName);
+                    },
+                  ),
+                )
               ],
             ),
           ),
