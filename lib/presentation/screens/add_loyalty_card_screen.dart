@@ -1,10 +1,15 @@
 import 'dart:math';
 
+import 'package:barcode_widget/barcode_widget.dart' as code;
+import 'package:cards_app/data/models/loyalty_card_model.dart';
 import 'package:cards_app/presentation/screens/scan_code_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AddLoyaltyCardScreen extends StatefulWidget {
   AddLoyaltyCardScreen({Key? key}) : super(key: key);
@@ -16,74 +21,165 @@ class AddLoyaltyCardScreen extends StatefulWidget {
 }
 
 class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
-  final GlobalKey _addNewCardFormKey = GlobalKey();
+  final GlobalKey<FormState> _addNewCardFormKey = GlobalKey<FormState>();
+  final companyNameController = TextEditingController();
+  final companyNameFocusNode = FocusNode();
+  final cardNameController = TextEditingController();
+  final cardNameFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    companyNameController.dispose();
+    companyNameFocusNode.dispose();
+    cardNameController.dispose();
+    cardNameFocusNode.dispose();
+    super.dispose();
+  }
 
   Color pickerColor = Color(0xff443a49);
   Color currentColor = Color(0xff443a49);
+  String barcodeData = '';
+  String barcodeFormat = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add new loyalty card'),
+        title: Text('Add new card'),
       ),
       body: SafeArea(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _addNewCardFormKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Company name', hintText: 'Biedronka'),
-                ),
-                SizedBox(height: 15.h),
-                TextFormField(
-                  decoration: const InputDecoration(
-                      labelText: 'Card name', hintText: 'Moja Biedronka'),
-                ),
-                SizedBox(height: 15.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(currentColor)),
-                      onPressed: () {
-                        showColorPicker(context);
-                      },
-                      icon: Icon(Icons.color_lens,
-                          color: useWhiteForeground(currentColor)
-                              ? Colors.white
-                              : Colors.black),
-                      label: Text(
-                        'Pick color',
-                        style: TextStyle(
-                            color: useWhiteForeground(currentColor)
-                                ? Colors.white
-                                : Colors.black),
-                      )),
-                ),
-                SizedBox(
-                  height: 15.h,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    label: Text('Scan code'),
-                    icon: Icon(Icons.qr_code_scanner),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(ScanCodeScreen.routeName);
-                    },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+          child: Column(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _addNewCardFormKey,
+                  child: ListView(
+                    children: [
+                      TextFormField(
+                        validator: validateText,
+                        autofocus: true,
+                        controller: companyNameController,
+                        focusNode: companyNameFocusNode,
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (_) {
+                          cardNameFocusNode.requestFocus();
+                        },
+                        decoration: const InputDecoration(
+                            labelText: 'Company name', hintText: 'IKEA'),
+                      ),
+                      SizedBox(height: 15.h),
+                      TextFormField(
+                        validator: validateText,
+                        controller: cardNameController,
+                        focusNode: cardNameFocusNode,
+                        decoration: const InputDecoration(
+                            labelText: 'Card name', hintText: 'IKEA Family'),
+                      ),
+                      SizedBox(height: 15.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        currentColor)),
+                            onPressed: () {
+                              showColorPicker(context);
+                            },
+                            icon: Icon(Icons.color_lens,
+                                color: useWhiteForeground(currentColor)
+                                    ? Colors.white
+                                    : Colors.black),
+                            label: Text(
+                              'Pick color',
+                              style: TextStyle(
+                                  color: useWhiteForeground(currentColor)
+                                      ? Colors.white
+                                      : Colors.black),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 15.h,
+                      ),
+                      if (barcodeData.isNotEmpty)
+                        SizedBox(
+                          child: Card(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.r))),
+                            child: code.BarcodeWidget(
+                                drawText: false,
+                                data: barcodeData,
+                                barcode:
+                                    barcodeFormat != 'BarcodeFormat.code128'
+                                        ? code.Barcode.qrCode()
+                                        : code.Barcode.code128(),
+                                width: 240.w,
+                                height: barcodeFormat == 'BarcodeFormat.code128'
+                                    ? 80.h
+                                    : 200.h,
+                                padding: EdgeInsets.all(12.w)),
+                          ),
+                        ),
+                      SizedBox(height: 15.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          label: Text(
+                              barcodeData.isEmpty ? 'Scan code' : 'Scan again'),
+                          icon: const Icon(Icons.qr_code_scanner),
+                          onPressed: () async {
+                            await Navigator.of(context)
+                                .pushNamed(ScanCodeScreen.routeName)
+                                .then((value) {
+                              Map<String, Object?> barcode = {};
+                              barcode = value as Map<String, Object?>;
+
+                              setState(() {
+                                barcodeData = barcode['barcodeData'].toString();
+                                barcodeFormat =
+                                    barcode['barcodeFormat'].toString();
+                              });
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 15.h)
+                    ],
                   ),
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_addNewCardFormKey.currentState!.validate()) {
+                        if (barcodeData.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'Please scan barcode before you continue')));
+                        } else {
+                          var card = LoyaltyCard(
+                              id: 0,
+                              cardColor: currentColor.value,
+                              cardNumber: barcodeData,
+                              companyName: cardNameController.text,
+                              cardName: cardNameController.text,
+                              cardFormat: barcodeFormat);
+                          createNewCard(card);
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+                    child: Text('Create new Card'),
+                  ))
+            ],
           ),
         ),
-      )),
+      ),
     );
   }
 
@@ -125,4 +221,34 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
         .round();
     return v < 130 + bias ? true : false;
   }
+}
+
+String? validateText(String? text) {
+  if (text!.isEmpty) return 'This field cannot be empty';
+  return null;
+}
+
+Future createNewCard(LoyaltyCard card) async {
+  final String userUID = FirebaseAuth.instance.currentUser!.uid;
+  final String? userEmail = FirebaseAuth.instance.currentUser!.email;
+  final docUser = FirebaseFirestore.instance.collection('users').doc(userUID);
+
+  final json = {
+    'email': userEmail,
+  };
+
+  await docUser.set(json);
+  final docCard = docUser.collection('cards').doc();
+
+  final jsonCard = {
+    'id': docCard.id,
+    'cardName': card.cardName,
+    'companyName': card.companyName,
+    'cardColor': card.cardColor,
+    'cardNumber': card.cardNumber,
+    'cardFormat': card.cardFormat,
+    'isSync': card.isSync,
+  };
+
+  await docCard.set(jsonCard);
 }

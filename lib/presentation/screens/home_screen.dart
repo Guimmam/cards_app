@@ -139,18 +139,21 @@ class LoyaltyCardWidget extends StatelessWidget {
                     color: useWhiteIcons ? Colors.white : Colors.black),
               ),
               SizedBox(height: 5.h),
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.r))),
-                child: SizedBox(
-                  height: 60.h,
-                  child: BarcodeWidget(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                      drawText: false,
-                      data: cardsList.elementAt(index).cardNumber,
-                      barcode: Barcode.code128()),
+              GestureDetector(
+                onTap: () {},
+                child: Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.r))),
+                  // child: SizedBox(
+                  //   height: 60.h,
+                  //   child: BarcodeWidget(
+                  //       padding:
+                  //           EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  //       drawText: false,
+                  //       data: cardsList.elementAt(index).cardNumber,
+                  //       barcode: Barcode.code128()),
+                  // ),
                 ),
               )
             ]),

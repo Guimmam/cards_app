@@ -49,6 +49,7 @@ dependencies:
   barcode_widget: ^2.0.2
   mobile_scanner: ^1.0.0
   flutter_colorpicker: ^1.0.3
+  cloud_firestore: ^3.1.12
 
 
 
