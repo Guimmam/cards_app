@@ -163,10 +163,10 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
                                   'Please scan barcode before you continue')));
                         } else {
                           var card = LoyaltyCard(
-                              id: 0,
+                              id: '0',
                               cardColor: currentColor.value,
                               cardNumber: barcodeData,
-                              companyName: cardNameController.text,
+                              companyName: companyNameController.text,
                               cardName: cardNameController.text,
                               cardFormat: barcodeFormat);
                           createNewCard(card);
@@ -247,7 +247,7 @@ Future createNewCard(LoyaltyCard card) async {
     'cardColor': card.cardColor,
     'cardNumber': card.cardNumber,
     'cardFormat': card.cardFormat,
-    'isSync': card.isSync,
+    'isSync': true,
   };
 
   await docCard.set(jsonCard);

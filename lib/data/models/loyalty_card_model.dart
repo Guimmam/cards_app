@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class LoyaltyCard extends Equatable {
-  final int id;
+  final String id;
   final String cardName;
   final String companyName;
   final int cardColor;
@@ -29,6 +29,16 @@ class LoyaltyCard extends Equatable {
         'cardFormat': cardFormat,
         'isSync': isSync,
       };
+
+  static LoyaltyCard fromJson(Map<String, dynamic> json) => LoyaltyCard(
+        id: json['id'],
+        cardName: json['cardName'],
+        companyName: json['companyName'],
+        cardFormat: json['cardFormat'],
+        cardColor: json['cardColor'],
+        cardNumber: json['cardNumber'],
+        isSync: json['isSync'],
+      );
 
   @override
   List<Object?> get props => throw UnimplementedError();
