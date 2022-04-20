@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cards_app/data/models/loyalty_card_model.dart';
 import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
+import 'package:cards_app/presentation/screens/show_card_info_screen.dart';
 import 'package:cards_app/presentation/theme/theme_menager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,54 +30,55 @@ class HomeScreen extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cards'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
-              icon: Icon(Icons.logout))
-        ],
-      ),
-      body: SafeArea(
-          child: StreamBuilder<List<LoyaltyCard>>(
-              stream: fetchCards(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  print('ERRRRRRRRROR' + snapshot.error.toString());
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
-                }
-                if (snapshot.hasData) {
-                  final cards = snapshot.data!;
-                  if (cards.isEmpty) {
+        appBar: AppBar(
+          title: Text('Cards'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                icon: Icon(Icons.logout))
+          ],
+        ),
+        body: SafeArea(
+            child: StreamBuilder<List<LoyaltyCard>>(
+                stream: fetchCards(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
                     return Center(
-                      child: Text('There are no cards to show'),
+                      child: Text(snapshot.error.toString()),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: cards.length,
-                    itemBuilder: (context, index) {
-                      return buildCard(context, cards.elementAt(index));
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              })),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text('Add new Card'),
-        onPressed: () {
-          Navigator.of(context).pushNamed(AddLoyaltyCardScreen.routeName);
-        },
-      ),
-    );
+                  if (snapshot.hasData) {
+                    final cards = snapshot.data!;
+                    if (cards.isEmpty) {
+                      return Center(
+                        child: Text('There are no cards to show'),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: cards.length,
+                      itemBuilder: (context, index) {
+                        return buildCard(context, cards.elementAt(index));
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                })),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: SizedBox(
+          width: 160.w,
+          child: ElevatedButton(
+            child: Text('Add new Card'),
+            onPressed: () {
+              Navigator.of(context).pushNamed(AddLoyaltyCardScreen.routeName);
+            },
+          ),
+        ));
   }
 
   Stream<List<LoyaltyCard>> fetchCards() {
@@ -106,8 +108,8 @@ Widget buildCard(BuildContext context, LoyaltyCard card) {
     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 5.h),
     child: GestureDetector(
       onTap: () {
-        print('pac pac');
-        //TODO: add screen to show cards
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ShowCardInfoScreen(card: card)));
       },
       child: AspectRatio(
         aspectRatio: 16 / 9,
