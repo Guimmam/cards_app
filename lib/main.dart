@@ -10,6 +10,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
@@ -24,7 +25,10 @@ void main() async {
     }
   }
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 ThemeManager _themeManager = ThemeManager();
@@ -72,6 +76,7 @@ class _MyAppState extends State<MyApp> {
           '/': (context) => const AuthScreen(),
           AddLoyaltyCardScreen.routeName: (context) => AddLoyaltyCardScreen(),
           ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
+          
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
