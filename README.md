@@ -5,7 +5,7 @@ Simple app made with Flutter to store loyalty cards. I used Firebase to authenti
 ## Used technologies
 Flutter, Dart, Firebase
 
-## Screnshots
+## Screenshots
 
 ![Screenshot_1651140397](https://user-images.githubusercontent.com/77902674/165739784-47f5e898-523a-4bfe-8cec-3f36f9b2d131.png)
 
