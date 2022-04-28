@@ -145,15 +145,7 @@ Widget buildCard(BuildContext context, LoyaltyCard card) {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.r))),
-                // child: SizedBox(
-                //   height: 60.h,
-                //   child: BarcodeWidget(
-                //       padding:
-                //           EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                //       drawText: false,
-                //       data: cardsList.elementAt(index).cardNumber,
-                //       barcode: Barcode.code128()),
-                // ),
+           
               )
             ]),
           ),

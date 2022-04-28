@@ -41,7 +41,9 @@ class WelcomeScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 ContinueWithButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showThisFeatureWillBeAddedSoonSnackBar(context);
+                    },
                     bgColor: Colors.black,
                     textColor: Colors.white,
                     text: 'Continue With Google',
@@ -53,7 +55,9 @@ class WelcomeScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 ContinueWithButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showThisFeatureWillBeAddedSoonSnackBar(context);
+                    },
                     bgColor: isDark ? Colors.black26 : Colors.white,
                     textColor: isDark ? Colors.white : Colors.black,
                     text: 'Continue With Facebook',
@@ -65,7 +69,9 @@ class WelcomeScreen extends StatelessWidget {
                   height: 10.h,
                 ),
                 ContinueWithButton(
-                    onPressed: (() {}),
+                    onPressed: () {
+                      showThisFeatureWillBeAddedSoonSnackBar(context);
+                    },
                     bgColor: isDark ? Colors.black26 : Colors.white,
                     textColor: isDark ? Colors.white : Colors.black,
                     text: 'Continue With Github',
@@ -124,4 +130,15 @@ class WelcomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
       context: context,
       builder: (context) => const CreateAccountModalBottomSheet());
+}
+
+void showThisFeatureWillBeAddedSoonSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
+      content: const Text(
+        'this feature will be added soon',
+        textAlign: TextAlign.center,
+      )));
 }
