@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cards_app/data/models/loyalty_card_model.dart';
 import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
 import 'package:cards_app/presentation/screens/show_card_info_screen.dart';
-import 'package:cards_app/presentation/theme/theme_menager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,18 +26,17 @@ class HomeScreen extends StatelessWidget {
                   : Brightness.light));
     }
 
-    User? user = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Cards'),
+          title: const Text('Cards'),
           centerTitle: true,
           actions: [
             IconButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut();
                 },
-                icon: Icon(Icons.logout))
+                icon: const Icon(Icons.logout))
           ],
         ),
         body: SafeArea(
@@ -55,7 +51,7 @@ class HomeScreen extends StatelessWidget {
                   if (snapshot.hasData) {
                     final cards = snapshot.data!;
                     if (cards.isEmpty) {
-                      return Center(
+                      return const Center(
                         child: Text('There are no cards to show'),
                       );
                     }
@@ -66,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                       },
                     );
                   } else {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
@@ -75,7 +71,7 @@ class HomeScreen extends StatelessWidget {
         floatingActionButton: SizedBox(
           width: 160.w,
           child: ElevatedButton(
-            child: Text('Add new Card'),
+            child: const Text('Add new Card'),
             onPressed: () {
               Navigator.of(context).pushNamed(AddLoyaltyCardScreen.routeName);
             },

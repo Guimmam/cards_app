@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-class LoyaltyCard extends Equatable {
+class LoyaltyCard {
   final String id;
   final String cardName;
   final String companyName;
@@ -38,7 +36,4 @@ class LoyaltyCard extends Equatable {
         cardNumber: json['cardNumber'],
         isSync: json['isSync'],
       );
-
-  @override
-  List<Object?> get props => throw UnimplementedError();
 }

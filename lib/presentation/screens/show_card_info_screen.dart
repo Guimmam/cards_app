@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cards_app/data/models/loyalty_card_model.dart';
-import 'package:cards_app/presentation/screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,7 @@ class ShowCardInfoScreen extends StatelessWidget {
     bool useWhiteIcons = useWhiteForeground(Color(card.cardColor));
 
     return Scaffold(
-      appBar: AppBar(title: Text('Card')),
+      appBar: AppBar(title: const Text('Card')),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Column(
@@ -126,7 +125,7 @@ class ShowCardInfoScreen extends StatelessWidget {
                     onPressed: () async {
                       _showConfirmationBottomSheet(context);
                     },
-                    child: Text('Delete card'))),
+                    child: const Text('Delete card'))),
           ],
         ),
       ),
@@ -157,7 +156,7 @@ class ShowCardInfoScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('No, I want to keep it')),
+                    child: const Text('No, I want to keep it')),
               ),
               SizedBox(
                 height: 10.h,
@@ -173,8 +172,8 @@ class ShowCardInfoScreen extends StatelessWidget {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
-                    icon: Icon(Icons.delete_forever),
-                    label: Text('Yes, delete it')),
+                    icon: const Icon(Icons.delete_forever),
+                    label: const Text('Yes, delete it')),
               ),
               SizedBox(
                 height: 20.h,

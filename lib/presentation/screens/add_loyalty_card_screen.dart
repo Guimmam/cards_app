@@ -6,13 +6,11 @@ import 'package:cards_app/presentation/screens/scan_code_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 
 class AddLoyaltyCardScreen extends StatefulWidget {
-  AddLoyaltyCardScreen({Key? key}) : super(key: key);
+  const AddLoyaltyCardScreen({Key? key}) : super(key: key);
 
   static String routeName = 'add_loyalty_card_screen';
 
@@ -36,8 +34,8 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
     super.dispose();
   }
 
-  Color pickerColor = Color(0xff443a49);
-  Color currentColor = Color(0xff443a49);
+  Color pickerColor = const Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
   String barcodeData = '';
   String barcodeFormat = '';
 
@@ -45,7 +43,7 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add new card'),
+        title: const Text('Add new card'),
       ),
       body: SafeArea(
         child: Padding(
@@ -158,7 +156,7 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
                     onPressed: () {
                       if (_addNewCardFormKey.currentState!.validate()) {
                         if (barcodeData.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                               content: Text(
                                   'Please scan barcode before you continue')));
                         } else {
@@ -174,7 +172,7 @@ class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
                         }
                       }
                     },
-                    child: Text('Create new Card'),
+                    child: const Text('Create new Card'),
                   ))
             ],
           ),

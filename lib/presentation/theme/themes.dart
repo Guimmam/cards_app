@@ -46,6 +46,9 @@ ThemeData lightTheme = ThemeData(
         color: lightFontColor,
       ),
     ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: GoogleFonts.nunito(),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
           textStyle: MaterialStateProperty.all(
@@ -88,6 +91,9 @@ ThemeData darkTheme = ThemeData(
           color: Colors.white,
         ),
         subtitle1: GoogleFonts.nunito(color: Colors.white70)),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: GoogleFonts.nunito(color: Colors.black87),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
           textStyle: MaterialStateProperty.all(
