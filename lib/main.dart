@@ -68,15 +68,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
-      builder: () => MaterialApp(
+      builder: (_, child) => MaterialApp(
         scrollBehavior: const MaterialScrollBehavior(
             androidOverscrollIndicator: AndroidOverscrollIndicator.stretch),
         initialRoute: '/',
         routes: {
           '/': (context) => const AuthScreen(),
-          AddLoyaltyCardScreen.routeName: (context) => const AddLoyaltyCardScreen(),
+          AddLoyaltyCardScreen.routeName: (context) =>
+              const AddLoyaltyCardScreen(),
           ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
-          
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
