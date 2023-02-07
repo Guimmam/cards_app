@@ -16,7 +16,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -24,7 +24,7 @@ void main() async {
       FlutterDisplayMode.setHighRefreshRate();
     }
   }
-  await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(const MyApp());
