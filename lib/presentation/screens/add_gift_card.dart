@@ -9,16 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AddLoyaltyCardScreen extends StatefulWidget {
-  const AddLoyaltyCardScreen({Key? key}) : super(key: key);
+class AddGiftCard extends StatefulWidget {
+  const AddGiftCard({Key? key}) : super(key: key);
 
-  static String routeName = 'add_loyalty_card_screen';
+  static String routeName = 'add_gift_card';
 
   @override
-  State<AddLoyaltyCardScreen> createState() => _AddLoyaltyCardScreenState();
+  State<AddGiftCard> createState() => _AddGiftCardState();
 }
 
-class _AddLoyaltyCardScreenState extends State<AddLoyaltyCardScreen> {
+class _AddGiftCardState extends State<AddGiftCard> {
   final GlobalKey<FormState> _addNewCardFormKey = GlobalKey<FormState>();
   final companyNameController = TextEditingController();
   final companyNameFocusNode = FocusNode();

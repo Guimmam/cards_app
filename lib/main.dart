@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cards_app/data/providers/auth_provider.dart';
+import 'package:cards_app/presentation/screens/add_gift_card.dart';
 import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
 import 'package:cards_app/presentation/screens/home_screen.dart';
 import 'package:cards_app/presentation/screens/scan_code_screen.dart';
@@ -13,10 +15,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -27,7 +32,11 @@ void main() async {
 
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(const MyApp());
+    runApp(MultiProvider(providers: [
+      ChangeNotifierProvider<AuthProvider>(
+        create: (context) => AuthProvider(),
+      ),
+    ], child: const MyApp()));
   });
 }
 
@@ -77,6 +86,7 @@ class _MyAppState extends State<MyApp> {
           AddLoyaltyCardScreen.routeName: (context) =>
               const AddLoyaltyCardScreen(),
           ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
+          AddGiftCard.routeName: (context) => const AddGiftCard(),
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,

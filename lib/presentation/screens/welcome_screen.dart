@@ -1,19 +1,24 @@
 import 'dart:io';
 
+import 'package:cards_app/data/providers/auth_provider.dart';
 import 'package:cards_app/presentation/widgets/create_account_modal_bottom_sheet.dart';
 import 'package:cards_app/presentation/widgets/continue_with_button.dart';
 import 'package:cards_app/presentation/widgets/login_modal_bottom_sheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -42,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 ContinueWithButton(
                     onPressed: () {
-                      showThisFeatureWillBeAddedSoonSnackBar(context);
+                      auth.googleLogin();
                     },
                     bgColor: Colors.black,
                     textColor: Colors.white,
@@ -51,34 +56,34 @@ class WelcomeScreen extends StatelessWidget {
                       FontAwesomeIcons.google,
                       color: Colors.white,
                     )),
-                SizedBox(
-                  height: 10.h,
-                ),
-                ContinueWithButton(
-                    onPressed: () {
-                      showThisFeatureWillBeAddedSoonSnackBar(context);
-                    },
-                    bgColor: isDark ? Colors.black26 : Colors.white,
-                    textColor: isDark ? Colors.white : Colors.black,
-                    text: 'Continue With Facebook',
-                    icon: FaIcon(
-                      FontAwesomeIcons.facebook,
-                      color: isDark ? Colors.white : Colors.black,
-                    )),
-                SizedBox(
-                  height: 10.h,
-                ),
-                ContinueWithButton(
-                    onPressed: () {
-                      showThisFeatureWillBeAddedSoonSnackBar(context);
-                    },
-                    bgColor: isDark ? Colors.black26 : Colors.white,
-                    textColor: isDark ? Colors.white : Colors.black,
-                    text: 'Continue With Github',
-                    icon: FaIcon(
-                      FontAwesomeIcons.github,
-                      color: isDark ? Colors.white : Colors.black,
-                    )),
+                // SizedBox(
+                //   height: 10.h,
+                // ),
+                // ContinueWithButton(
+                //     onPressed: () {
+                //       showThisFeatureWillBeAddedSoonSnackBar(context);
+                //     },
+                //     bgColor: isDark ? Colors.black26 : Colors.white,
+                //     textColor: isDark ? Colors.white : Colors.black,
+                //     text: 'Continue With Facebook',
+                //     icon: FaIcon(
+                //       FontAwesomeIcons.facebook,
+                //       color: isDark ? Colors.white : Colors.black,
+                //     )),
+                // SizedBox(
+                //   height: 10.h,
+                // ),
+                // ContinueWithButton(
+                //     onPressed: () {
+                //       showThisFeatureWillBeAddedSoonSnackBar(context);
+                //     },
+                //     bgColor: isDark ? Colors.black26 : Colors.white,
+                //     textColor: isDark ? Colors.white : Colors.black,
+                //     text: 'Continue With Github',
+                //     icon: FaIcon(
+                //       FontAwesomeIcons.github,
+                //       color: isDark ? Colors.white : Colors.black,
+                //     )),
                 SizedBox(
                   height: 20.h,
                 ),

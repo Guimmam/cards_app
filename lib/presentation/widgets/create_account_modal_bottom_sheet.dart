@@ -1,8 +1,10 @@
+import 'package:cards_app/data/providers/auth_provider.dart';
 import 'package:cards_app/presentation/widgets/show_error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccountModalBottomSheet extends StatefulWidget {
   const CreateAccountModalBottomSheet({
@@ -332,13 +334,9 @@ class _CreateAccountModalBottomSheetState
 
   Future<FirebaseAuthException?> createAccount() async {
     try {
-      UserCredential result =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      User? user = result.user;
-      await user!.updateDisplayName(_usernameController.text.trim());
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      await auth.createAccountWithEmailAndPassword(_emailController.text.trim(),
+          _passwordController.text.trim(), _usernameController.text.trim());
     } on FirebaseAuthException catch (e) {
       showErrorDialog(e, context);
       return e;

@@ -9,14 +9,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+import '../../data/providers/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     if (Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -26,7 +28,6 @@ class HomeScreen extends StatelessWidget {
                   : Brightness.light));
     }
 
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Cards'),
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  FirebaseAuth.instance.signOut();
+                  auth.logout();
                 },
                 icon: const Icon(Icons.logout))
           ],
@@ -141,7 +142,6 @@ Widget buildCard(BuildContext context, LoyaltyCard card) {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.r))),
-           
               )
             ]),
           ),

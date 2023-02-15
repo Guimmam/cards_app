@@ -1,9 +1,11 @@
+import 'package:cards_app/data/providers/auth_provider.dart';
 import 'package:cards_app/presentation/widgets/show_error_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class LoginModalBottomSheet extends StatefulWidget {
   const LoginModalBottomSheet({Key? key}) : super(key: key);
@@ -163,10 +165,9 @@ class _LoginModalBottomSheetState extends State<LoginModalBottomSheet> {
 
   Future<FirebaseAuthException?> logiIn() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      await auth.loginWithEmailAndPassword(
+          emailController.text.trim(), passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
       showErrorDialog(e, context);
       return e;

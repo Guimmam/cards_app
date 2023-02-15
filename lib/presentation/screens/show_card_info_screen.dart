@@ -113,19 +113,35 @@ class ShowCardInfoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.redAccent),
-                      overlayColor: MaterialStateProperty.all(
-                          Colors.red.withOpacity(0.2)),
-                    ),
-                    onPressed: () async {
-                      _showConfirmationBottomSheet(context);
-                    },
-                    child: const Text('Delete card'))),
+            Column(
+              children: [
+                SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                          overlayColor: MaterialStateProperty.all(
+                              Colors.green.withOpacity(0.2)),
+                        ),
+                        onPressed: () {},
+                        child: const Text('Add gift card'))),
+                SizedBox(height: 10.h),
+                SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all(Colors.redAccent),
+                          overlayColor: MaterialStateProperty.all(
+                              Colors.red.withOpacity(0.2)),
+                        ),
+                        onPressed: () async {
+                          _showConfirmationBottomSheet(context);
+                        },
+                        child: const Text('Delete card'))),
+              ],
+            ),
           ],
         ),
       ),
