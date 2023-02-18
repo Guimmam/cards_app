@@ -86,7 +86,6 @@ class _MyAppState extends State<MyApp> {
           AddLoyaltyCardScreen.routeName: (context) =>
               const AddLoyaltyCardScreen(),
           ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
-          AddGiftCard.routeName: (context) => const AddGiftCard(),
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,

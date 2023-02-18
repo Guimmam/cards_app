@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:cards_app/data/models/loyalty_card_model.dart';
 import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
-import 'package:cards_app/presentation/screens/show_card_info_screen.dart';
+import 'package:cards_app/presentation/screens/card_info_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

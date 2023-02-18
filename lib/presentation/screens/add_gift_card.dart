@@ -1,16 +1,24 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:barcode_widget/barcode_widget.dart' as code;
-import 'package:cards_app/data/models/loyalty_card_model.dart';
-import 'package:cards_app/presentation/screens/scan_code_screen.dart';
+import 'package:cards_app/data/models/gift_card_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:cards_app/data/models/loyalty_card_model.dart';
+import 'package:cards_app/presentation/screens/scan_code_screen.dart';
+
 class AddGiftCard extends StatefulWidget {
-  const AddGiftCard({Key? key}) : super(key: key);
+  final LoyaltyCard card;
+  const AddGiftCard({
+    Key? key,
+    required this.card,
+  }) : super(key: key);
 
   static String routeName = 'add_gift_card';
 
@@ -20,30 +28,32 @@ class AddGiftCard extends StatefulWidget {
 
 class _AddGiftCardState extends State<AddGiftCard> {
   final GlobalKey<FormState> _addNewCardFormKey = GlobalKey<FormState>();
-  final companyNameController = TextEditingController();
-  final companyNameFocusNode = FocusNode();
-  final cardNameController = TextEditingController();
-  final cardNameFocusNode = FocusNode();
+  final cardNumberController = TextEditingController();
+  final cardNumberFocusNode = FocusNode();
+  final balanceController = TextEditingController();
+  final balanceFocusNode = FocusNode();
+  final linkController = TextEditingController();
+  final linkFocusNode = FocusNode();
 
   @override
   void dispose() {
-    companyNameController.dispose();
-    companyNameFocusNode.dispose();
-    cardNameController.dispose();
-    cardNameFocusNode.dispose();
+    cardNumberController.dispose();
+    cardNumberFocusNode.dispose();
+    balanceController.dispose();
+    balanceFocusNode.dispose();
+    linkController.dispose();
+    linkFocusNode.dispose();
     super.dispose();
   }
 
-  Color pickerColor = const Color(0xff443a49);
-  Color currentColor = const Color(0xff443a49);
   String barcodeData = '';
-  String barcodeFormat = '';
+  String barcodeFormat = 'BarcodeFormat.code128';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add new card'),
+        title: Text('Add gift card to ${widget.card.companyName}'),
       ),
       body: SafeArea(
         child: Padding(
@@ -58,45 +68,36 @@ class _AddGiftCardState extends State<AddGiftCard> {
                       TextFormField(
                         validator: validateText,
                         autofocus: true,
-                        controller: companyNameController,
-                        focusNode: companyNameFocusNode,
+                        controller: cardNumberController,
+                        focusNode: cardNumberFocusNode,
                         textInputAction: TextInputAction.next,
+                        onChanged: (value) {
+                          setState(() {
+                            barcodeData = value;
+                          });
+                        },
                         onFieldSubmitted: (_) {
-                          cardNameFocusNode.requestFocus();
+                          balanceFocusNode.requestFocus();
                         },
                         decoration: const InputDecoration(
-                            labelText: 'Company name', hintText: 'IKEA'),
+                            labelText: 'Card Number', hintText: ''),
                       ),
                       SizedBox(height: 15.h),
                       TextFormField(
                         validator: validateText,
-                        controller: cardNameController,
-                        focusNode: cardNameFocusNode,
+                        controller: balanceController,
+                        focusNode: balanceFocusNode,
                         decoration: const InputDecoration(
-                            labelText: 'Card name', hintText: 'IKEA Family'),
+                            labelText: 'Balance', hintText: ''),
                       ),
                       SizedBox(height: 15.h),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        currentColor)),
-                            onPressed: () {
-                              showColorPicker(context);
-                            },
-                            icon: Icon(Icons.color_lens,
-                                color: useWhiteForeground(currentColor)
-                                    ? Colors.white
-                                    : Colors.black),
-                            label: Text(
-                              'Pick color',
-                              style: TextStyle(
-                                  color: useWhiteForeground(currentColor)
-                                      ? Colors.white
-                                      : Colors.black),
-                            )),
+                      TextFormField(
+                        validator: validateText,
+                        controller: linkController,
+                        focusNode: linkFocusNode,
+                        decoration: const InputDecoration(
+                            labelText: 'Link to check your balance ',
+                            hintText: 'Optional'),
                       ),
                       SizedBox(
                         height: 15.h,
@@ -159,6 +160,7 @@ class _AddGiftCardState extends State<AddGiftCard> {
 
                               setState(() {
                                 barcodeData = barcode['barcodeData'].toString();
+                                cardNumberController.text = barcodeData;
                                 barcodeFormat =
                                     barcode['barcodeFormat'].toString();
                               });
@@ -174,7 +176,7 @@ class _AddGiftCardState extends State<AddGiftCard> {
               SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_addNewCardFormKey.currentState!.validate()) {
                         if (barcodeData.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -182,19 +184,15 @@ class _AddGiftCardState extends State<AddGiftCard> {
                                   content: Text(
                                       'Please scan barcode before you continue')));
                         } else {
-                          var card = LoyaltyCard(
-                              id: '0',
-                              cardColor: currentColor.value,
-                              cardNumber: barcodeData,
-                              companyName: companyNameController.text,
-                              cardName: cardNameController.text,
-                              cardFormat: barcodeFormat);
-                          createNewCard(card);
-                          Navigator.of(context).pop();
+                          await createNewCard(
+                              cardNumberController.text,
+                              double.parse(balanceController.text),
+                              linkController.text);
+                          Navigator.pop(context, true);
                         }
                       }
                     },
-                    child: const Text('Create new Card'),
+                    child: const Text('Add Gift Card'),
                   ))
             ],
           ),
@@ -203,72 +201,29 @@ class _AddGiftCardState extends State<AddGiftCard> {
     );
   }
 
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
+  String? validateText(String? text) {
+    if (text!.isEmpty) return 'This field cannot be empty';
+    return null;
   }
 
-  Future<dynamic> showColorPicker(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pick a color!'),
-        content: SingleChildScrollView(
-          child: BlockPicker(
-            pickerColor: pickerColor,
-            onColorChanged: changeColor,
-          ),
-        ),
-        actions: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              child: const Text('Got it'),
-              onPressed: () {
-                setState(() => currentColor = pickerColor);
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+  Future createNewCard(String number, double balance, String link) async {
+    final String userUID = FirebaseAuth.instance.currentUser!.uid;
+    final String? userEmail = FirebaseAuth.instance.currentUser!.email;
+    final docUser = FirebaseFirestore.instance.collection('users').doc(userUID);
+
+    final json = {
+      'email': userEmail,
+    };
+
+    await docUser.set(json);
+    final docCard = docUser
+        .collection('cards')
+        .doc(widget.card.id)
+        .collection("giftCard")
+        .doc();
+    GiftCard card =
+        GiftCard(id: docCard.id, number: number, balance: balance, link: link);
+
+    await docCard.set(card.toMap());
   }
-
-  bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
-    int v = sqrt(pow(backgroundColor.red, 2) * 0.299 +
-            pow(backgroundColor.green, 2) * 0.587 +
-            pow(backgroundColor.blue, 2) * 0.114)
-        .round();
-    return v < 130 + bias ? true : false;
-  }
-}
-
-String? validateText(String? text) {
-  if (text!.isEmpty) return 'This field cannot be empty';
-  return null;
-}
-
-Future createNewCard(LoyaltyCard card) async {
-  final String userUID = FirebaseAuth.instance.currentUser!.uid;
-  final String? userEmail = FirebaseAuth.instance.currentUser!.email;
-  final docUser = FirebaseFirestore.instance.collection('users').doc(userUID);
-
-  final json = {
-    'email': userEmail,
-  };
-
-  await docUser.set(json);
-  final docCard = docUser.collection('cards').doc();
-
-  final jsonCard = {
-    'id': docCard.id,
-    'cardName': card.cardName,
-    'companyName': card.companyName,
-    'cardColor': card.cardColor,
-    'cardNumber': card.cardNumber,
-    'cardFormat': card.cardFormat,
-    'isSync': true,
-  };
-
-  await docCard.set(jsonCard);
 }
