@@ -36,15 +36,16 @@ class _ScanCodeScreenState extends State<ScanCodeScreen> {
             ),
           ],
         ),
-        body: MobileScanner(
-          
-            allowDuplicates: false,
-            controller: cameraController,
-            onDetect: (barcode, args) {
-              Navigator.pop(context, {
-                'barcodeFormat': barcode.format,
-                'barcodeData': barcode.rawValue
-              });
-            }));
+        body: Container());
+    // body: MobileScanner(
+
+    //     allowDuplicates: false,
+    //     controller: cameraController,
+    //     onDetect: (barcode, args) {
+    //       Navigator.pop(context, {
+    //         'barcodeFormat': barcode.format,
+    //         'barcodeData': barcode.rawValue
+    //       });
+    //     }));
   }
 }
