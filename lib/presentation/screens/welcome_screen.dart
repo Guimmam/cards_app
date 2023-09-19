@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
               children: [
                 Text('Hi There!', style: _textTheme.headline3),
                 const Text(
-                  'Please select the provider to enter to Cards',
+                  'Please select the provider to login',
                 ),
                 SizedBox(
                   height: 10.h,
