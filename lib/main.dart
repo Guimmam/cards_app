@@ -1,22 +1,20 @@
 import 'dart:io';
 
-import 'package:cards_app/data/providers/auth_provider.dart';
-import 'package:cards_app/presentation/screens/add_gift_card.dart';
-import 'package:cards_app/presentation/screens/add_loyalty_card_screen.dart';
 import 'package:cards_app/presentation/screens/home_screen.dart';
-import 'package:cards_app/presentation/screens/scan_code_screen.dart';
-import 'package:cards_app/presentation/screens/welcome_screen.dart';
-import 'package:cards_app/presentation/theme/theme_menager.dart';
-import 'package:cards_app/presentation/theme/themes.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import 'package:cards_app/data/providers/auth_provider.dart';
+
+import 'package:cards_app/presentation/screens/welcome_screen.dart';
+import 'package:cards_app/presentation/theme/theme_menager.dart';
+import 'package:cards_app/presentation/theme/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +23,7 @@ void main() async {
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    if (androidInfo.version.sdkInt! > 23) {
+    if (androidInfo.version.sdkInt > 23) {
       FlutterDisplayMode.setHighRefreshRate();
     }
   }
@@ -83,9 +81,6 @@ class _MyAppState extends State<MyApp> {
         initialRoute: '/',
         routes: {
           '/': (context) => const AuthScreen(),
-          AddLoyaltyCardScreen.routeName: (context) =>
-              const AddLoyaltyCardScreen(),
-          ScanCodeScreen.routeName: (context) => const ScanCodeScreen(),
         },
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
